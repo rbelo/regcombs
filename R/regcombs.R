@@ -9,7 +9,7 @@
 add.to.models <- function(dt.models, var.name, fmla) {
   dt.models <- copy(dt.models)
   dt.models[, k := 1]
-  if (class(fmla) == "formula") {
+  if ("formula" %in% class(fmla)) {
     to.repeat <- get.terms(parse.formula(fmla)$lhs)
     to.crossjoin <- get.terms(parse.formula(fmla)$rhs)
     to.recycle <- get.terms(parse.formula(fmla)$condition)
@@ -86,7 +86,7 @@ reg.combs.models <- function(fmla, data, reg.fn,
 #'          data = dt[1] + dt[2] ~ .,
 #'          reg.fn = ~ felm + logit,
 #'          include.all = TRUE)
-reg.combs <- function(fmla, data, reg.fn="felm",
+reg.combs <- function(fmla, data, reg.fn= ~ felm,
                       fe = ~ 0, iv = ~ 0, cl = ~ 0, w = ~ 0,
                       controls.alone=FALSE,
                       include.all=FALSE,
@@ -102,7 +102,7 @@ reg.combs <- function(fmla, data, reg.fn="felm",
                                 controls.alone = controls.alone,
                                 include.all = include.all)
   commands <- map(1:nrow(dt.models), function(iter) {
-    weights.string <- ifelse(w == "0", "",
+    weights.string <- ifelse(dt.models[iter, w] == "0", "",
                              paste0(", weights = ",
                                     dt.models[iter, data], "[, ",
                                     dt.models[iter, w], "]"))
