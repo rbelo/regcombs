@@ -56,9 +56,9 @@ reg.combs.models <- function(fmla, data, reg.fn,
     indep.vars.comb <- c(1, indep.vars.comb)
   }
   controls <- get.terms(parse.formula(fmla)$condition)
-  dt.models <- CJ(dep_var = dep.vars,
-                  indep_vars = indep.vars.comb,
-                  controls = paste0(controls, collapse=" + "))
+  dt.models <- data.table(expand.grid(dep_var = dep.vars,
+                                      indep_vars = indep.vars.comb,
+                                      controls = paste0(controls, collapse=" + ")))
   dt.models <- add.to.models(dt.models, "reg_fn", reg.fn)
   dt.models <- add.to.models(dt.models, "data", data)
   dt.models <- add.to.models(dt.models, "fe", fe)
