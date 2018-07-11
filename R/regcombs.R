@@ -41,10 +41,10 @@ add.to.models <- function(dt.models, var.name, fmla) {
 }
 
 
-reg.combs.models <- function(fmla, data, reg.fn,
-                           fe, iv, cl, w,
-                           controls.alone,
-                           include.all) {
+reg.combs.models <- function(fmla, data, reg.fn = ~ felm,
+                             fe = ~ 0, iv = ~ 0, cl = ~ 0, w = ~ 0,
+                             controls.alone=FALSE,
+                             include.all=FALSE) {
   dep.vars <- get.terms(parse.formula(fmla)$lhs)
   indep.vars <- get.terms(parse.formula(fmla)$rhs)
   if (include.all == TRUE) {
@@ -127,7 +127,8 @@ reg.combs <- function(fmla, data, reg.fn= ~ felm,
       reg.fn.params.string <- ""
     }
     formula.string <- paste0(dt.models[iter, dep_var], " ~ ",
-                             dt.models[iter, indep_vars], " + ",
+                             dt.models[iter, indep_vars],
+                             ifelse(dt.models[iter, controls] == "", "", " + "),
                              dt.models[iter, controls])
     command <- paste0(reg.fn.string, "(formula = ", formula.string,
                       reg.fn.params.string, ", data = ", dt.models[iter, data],

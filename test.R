@@ -53,3 +53,7 @@ aa <- reg.combs(a1 ~ b1 + b2 | c1 + c2 ,
                 fe = ~ 0,
                 iv = ~ 0)
 
+## Test not having explicit controls
+aa <- reg.combs(a1 ~ b1 + b2 ,
+                include.all = TRUE,
+                data = ~ dt.test)
