@@ -21,7 +21,7 @@ add.to.models <- function(dt.models, var.name, fmla) {
                          data.table(dep_var = dt.models[, unique(dep_var)],
                                     tmp_var = to.repeat),
                          by="dep_var", all.x = TRUE)
-    } else {
+    } else { # length(to.crossjoin) is assumed greater than 0
       dt.models <- merge(dt.models,
                          data.table(k = 1,
                                     tmp_var = to.crossjoin),
@@ -48,7 +48,7 @@ reg.combs.models <- function(fmla, data, reg.fn = ~ felm,
   dep.vars <- get.terms(parse.formula(fmla)$lhs)
   indep.vars <- get.terms(parse.formula(fmla)$rhs)
   if (include.all == TRUE) {
-    indep.vars.comb <- unique(c(indep.vars, paste(indep.vars, collapse=" + ")))
+    indep.vars.comb <- unique(c(indep.vars, paste0(indep.vars, collapse=" + ")))
   } else {
     indep.vars.comb <- indep.vars
   }
@@ -56,9 +56,20 @@ reg.combs.models <- function(fmla, data, reg.fn = ~ felm,
     indep.vars.comb <- c(1, indep.vars.comb)
   }
   controls <- get.terms(parse.formula(fmla)$condition)
+  if (length(controls) == 0) {
+    controls <- "1"
+  }
+  #if (include.all == TRUE) {
+  #  controls <-
+  #    unique(c(controls,
+  #             paste0("(", paste0(unique(get.terms(as.formula(paste("~", paste0(gsub("\\(", "", gsub("\\)", "", controls)), collapse=" + "))))), collapse= " + "), ")")))
+  #}
+  print(controls)
   dt.models <- data.table(expand.grid(dep_var = dep.vars,
-                                      indep_vars = indep.vars.comb,
-                                      controls = paste0(controls, collapse=" + ")))
+                                      indep_vars = indep.vars.comb))
+  dt.models <- add.to.models(dt.models, "controls",
+                             as.formula(paste( "~", paste0(controls, collapse=" + "))))
+  dt.models[controls == "1", controls := ""]
   dt.models <- add.to.models(dt.models, "reg_fn", reg.fn)
   dt.models <- add.to.models(dt.models, "data", data)
   dt.models <- add.to.models(dt.models, "fe", fe)
