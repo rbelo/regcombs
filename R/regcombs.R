@@ -64,7 +64,6 @@ reg.combs.models <- function(fmla, data, reg.fn = ~ felm,
   #    unique(c(controls,
   #             paste0("(", paste0(unique(get.terms(as.formula(paste("~", paste0(gsub("\\(", "", gsub("\\)", "", controls)), collapse=" + "))))), collapse= " + "), ")")))
   #}
-  print(controls)
   dt.models <- data.table(expand.grid(dep_var = dep.vars,
                                       indep_vars = indep.vars.comb))
   dt.models <- add.to.models(dt.models, "controls",
