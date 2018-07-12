@@ -42,30 +42,15 @@ add.to.models <- function(dt.models, var.name, fmla) {
 
 
 reg.combs.models <- function(fmla, data, reg.fn = ~ felm,
-                             fe = ~ 0, iv = ~ 0, cl = ~ 0, w = ~ 0,
-                             controls.alone=FALSE,
-                             include.all=FALSE) {
+                             fe = ~ 0, iv = ~ 0, cl = ~ 0, w = ~ 0) {
   dep.vars <- get.terms(parse.formula(fmla)$lhs)
   indep.vars <- get.terms(parse.formula(fmla)$rhs)
-  if (include.all == TRUE) {
-    indep.vars.comb <- unique(c(indep.vars, paste0(indep.vars, collapse=" + ")))
-  } else {
-    indep.vars.comb <- indep.vars
-  }
-  if (controls.alone == TRUE) {
-    indep.vars.comb <- c(1, indep.vars.comb)
-  }
   controls <- get.terms(parse.formula(fmla)$condition)
   if (length(controls) == 0) {
     controls <- "1"
   }
-  #if (include.all == TRUE) {
-  #  controls <-
-  #    unique(c(controls,
-  #             paste0("(", paste0(unique(get.terms(as.formula(paste("~", paste0(gsub("\\(", "", gsub("\\)", "", controls)), collapse=" + "))))), collapse= " + "), ")")))
-  #}
   dt.models <- data.table(expand.grid(dep_var = dep.vars,
-                                      indep_vars = indep.vars.comb))
+                                      indep_vars = indep.vars))
   dt.models <- add.to.models(dt.models, "controls",
                              as.formula(paste( "~", paste0(controls, collapse=" + "))))
   dt.models[controls == "1", controls := ""]
@@ -94,12 +79,9 @@ reg.combs.models <- function(fmla, data, reg.fn = ~ felm,
 #'          cl = ~ (cl1 + cl2),
 #'          w = ~ w1 + w2,
 #'          data = dt[1] + dt[2] ~ .,
-#'          reg.fn = ~ felm + logit,
-#'          include.all = TRUE)
+#'          reg.fn = ~ felm + logit)
 reg.combs <- function(fmla, data, reg.fn= ~ felm,
                       fe = ~ 0, iv = ~ 0, cl = ~ 0, w = ~ 0,
-                      controls.alone=FALSE,
-                      include.all=FALSE,
                       omit.stat=c("f", "ser"),
                       n.cores=1,
                       model.summaries = TRUE,
@@ -108,9 +90,7 @@ reg.combs <- function(fmla, data, reg.fn= ~ felm,
   dt.models <- reg.combs.models(fmla = fmla,
                                 data = data,
                                 reg.fn = reg.fn,
-                                fe = fe, iv = iv, cl = cl, w = w,
-                                controls.alone = controls.alone,
-                                include.all = include.all)
+                                fe = fe, iv = iv, cl = cl, w = w)
   commands <- map(1:nrow(dt.models), function(iter) {
     weights.string <- ifelse(dt.models[iter, w] == "0", "",
                              paste0(", weights = ",

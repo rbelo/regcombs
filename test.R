@@ -33,23 +33,20 @@ aa <- reg.combs(a1 + a2 ~ b1 + b2 | c1 + c2 ,
           cl = ~ (cl1 + cl2),
           w = ~ w1 + w2,
           data = dt.test[1:500] + dt.test[501:1000] ~ .,
-          reg.fn = ~ felm + logit,
-          include.all = TRUE, n.cores=4)
+          reg.fn = ~ felm + logit, n.cores=4)
 
 
 reg.combs.models(a1 ~ b1 | c1 + c2 ,
                 cl = ~ cl1,
                 w = ~ w2,
                 data = dt.test[1:500] + dt.test[501:1000] ~ .,
-                reg.fn = ~ felm + logit, include.all = FALSE, controls.alone = FALSE, fe = ~ 0, iv = ~ 0 )
+                reg.fn = ~ felm + logit, fe = ~ 0, iv = ~ 0 )
 
 aa <- reg.combs(a1 ~ b1 + b2 | (c1 + c2) ,
                  cl = ~ (cl1 + cl2),
                  w = ~ w2,
                 data =  ~ dt.test[c1 > 0] + dt.test[c1 < 0],
                 reg.fn = ~ felm + logit,
-                include.all = FALSE,
-                controls.alone = FALSE,
                 fe = ~ 0,
                 iv = ~ 0)
 
@@ -60,7 +57,6 @@ reg.combs.models(a1 + a2 + a3 + a4 ~ b1 + b2 | c1 ,
           data = d1 + d2 ~ .)
 
 reg.combs.models(a1 ~ b1 + b2 ,
-          include.all = TRUE,
           data = ~ dt.test[1:500])
 
 reg.combs.models(a1 ~ 1 + b1 + b2 + (b1 + b2) | (c1 + c2 + c3) + 1,
