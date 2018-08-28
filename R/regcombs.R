@@ -41,7 +41,7 @@ add.to.models <- function(dt.models, var.name, fmla) {
 }
 
 
-reg.combs.models <- function(fmla, data, reg.fn = ~ felm,
+reg.combs.models <- function(fmla, data, reg.fn = ~ felm, reg.params = ~ 0,
                              fe = ~ 0, iv = ~ 0, cl = ~ 0, w = ~ 0) {
   dep.vars <- get.terms(parse.formula(fmla)$lhs)
   indep.vars <- get.terms(parse.formula(fmla)$rhs)
@@ -55,6 +55,7 @@ reg.combs.models <- function(fmla, data, reg.fn = ~ felm,
                              as.formula(paste( "~", paste0(controls, collapse=" + "))))
   dt.models[controls == "1", controls := ""]
   dt.models <- add.to.models(dt.models, "reg_fn", reg.fn)
+  dt.models <- add.to.models(dt.models, "reg_params", reg.params)
   dt.models <- add.to.models(dt.models, "data", data)
   dt.models <- add.to.models(dt.models, "fe", fe)
   dt.models <- add.to.models(dt.models, "iv", iv)
@@ -81,7 +82,7 @@ reg.combs.models <- function(fmla, data, reg.fn = ~ felm,
 #'          data = dt[1] + dt[2] ~ .,
 #'          reg.fn = ~ felm + logit,
 #'          test = TRUE)
-reg.combs <- function(fmla, data, reg.fn= ~ felm,
+reg.combs <- function(fmla, data, reg.fn= ~ felm, reg.params = ~ 0,
                       fe = ~ 0, iv = ~ 0, cl = ~ 0, w = ~ 0,
                       omit.stat=c("f", "ser"),
                       n.cores=1,
@@ -91,6 +92,7 @@ reg.combs <- function(fmla, data, reg.fn= ~ felm,
   dt.models <- reg.combs.models(fmla = fmla,
                                 data = data,
                                 reg.fn = reg.fn,
+                                reg.params = reg.params,
                                 fe = fe, iv = iv, cl = cl, w = w)
   commands <- map(1:nrow(dt.models), function(iter) {
     weights.string <- ifelse(dt.models[iter, w] == "0", "",
@@ -114,8 +116,9 @@ reg.combs <- function(fmla, data, reg.fn= ~ felm,
         paste0(ifelse(dt.models[iter, fe] == "0", "", paste0(" + ", dt.models[iter, fe])),
                weights.string, ", family=binomial(link='probit')")
     } else {
-      reg.fn.string <- paste(deparse(substitute(reg.fn)), collapse="")
-      reg.fn.params.string <- ""
+      reg.fn.string <- dt.models[iter, reg_fn]
+      reg.fn.params.string <- ifelse(dt.models[iter, reg_params] == "0", "",
+                                     paste(",", dt.models[iter, reg_params]))
     }
     formula.string <- paste0(dt.models[iter, dep_var], " ~ ",
                              dt.models[iter, indep_vars],
