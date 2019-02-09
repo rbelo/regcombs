@@ -3,7 +3,7 @@ Title: Regression Combinations
 Version: 0.1
 Authors@R: person("Rodrigo", "Belo", email = "rodrigobelo@gmail.com", role = c("aut", "cre"))
 Description: Runs regression combinations and outputs a nice table with the results.
-Depends: R (>= 3.5.0)
+Depends: R (>= 3.4.1)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
