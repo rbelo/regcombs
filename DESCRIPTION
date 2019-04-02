@@ -1,6 +1,6 @@
 Package: regcombs
 Title: Regression Combinations
-Version: 0.1
+Version: 0.1.1
 Authors@R: person("Rodrigo", "Belo", email = "rodrigobelo@gmail.com", role = c("aut", "cre"))
 Description: Runs regression combinations and outputs a nice table with the results.
 Depends: R (>= 3.4.1)
