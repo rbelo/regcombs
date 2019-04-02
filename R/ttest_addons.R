@@ -4,12 +4,13 @@
 
 #install.packages("devtools")
 #library("devtools")
-#devtools::install_github("klutometis/roxygen")
+# #devtools::install_github("klutometis/roxygen")
 #library(roxygen2)
 #setwd("~/research")
 #create("regcombs")
 
 #source("common.R")
+
 
 #' Creates an ANOVA table
 #' @export
