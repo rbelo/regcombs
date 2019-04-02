@@ -66,10 +66,22 @@ reg.combs.models <- function(fmla, data, reg.fn = ~ felm, reg.params = ~ 0,
 
 #' Reg Combs
 #'
-#' This function allows you to perform regression combinations
+#' This function allows you to perform regression combinations.
+#' @import data.table
+#' @import doParallel
+#' @import foreach
+#' @import foreign
+#' @import formula.tools
+#' @import gtools
+#' @import Hmisc
+#' @import iterators
+#' @import lmtest
+#' @import parallel
+#' @import sandwich
+#' @import stargazer
 #' @param fmla a formula
 #' @param data data
-#' @keywords cats
+#' @keywords regression combinations
 #' @export
 #' @examples
 #' reg.combs(a1 + a2 ~ b1 + b2 + (b1 + b2) | c1 + (c1 + c2),
@@ -82,7 +94,7 @@ reg.combs.models <- function(fmla, data, reg.fn = ~ felm, reg.params = ~ 0,
 #'          data = dt[1] + dt[2] ~ .,
 #'          reg.fn = ~ felm + logit,
 #'          test = TRUE)
-reg.combs <- function(fmla, data, reg.fn= ~ felm, reg.params = ~ 0,
+reg.combs <- function(fmla, data, reg.fn = ~ felm, reg.params = ~ 0,
                       fe = ~ 0, iv = ~ 0, cl = ~ 0, w = ~ 0,
                       omit.stat=c("f", "ser"),
                       n.cores=1,

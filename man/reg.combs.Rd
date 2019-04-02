@@ -14,7 +14,7 @@ reg.combs(fmla, data, reg.fn = ~felm, reg.params = ~0, fe = ~0,
 \item{data}{data}
 }
 \description{
-This function allows you to perform regression combinations
+This function allows you to perform regression combinations.
 }
 \examples{
 reg.combs(a1 + a2 ~ b1 + b2 + (b1 + b2) | c1 + (c1 + c2),
@@ -28,4 +28,5 @@ reg.combs(a1 + a2 ~ b1 + b2 + (b1 + b2) | c1 + (c1 + c2),
          reg.fn = ~ felm + logit,
          test = TRUE)
 }
-\keyword{cats}
+\keyword{combinations}
+\keyword{regression}

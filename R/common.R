@@ -29,6 +29,8 @@ some <- function (x) {
   Reduce(`|`, x)
 }
 
+#' 
+#' @export
 map <- function(x, fn, combine=c, n.cores=1) {
   if (n.cores > 1) {
     registerDoParallel(n.cores)
@@ -113,7 +115,8 @@ Mode <- function(x) {
   ux[which.max(tabulate(match(x, ux)))]
 }
 
-
+#' 
+#' @export
 cl <- function(fm, cluster, vcov=FALSE, fast=FALSE){
     cluster <- cluster[!(1:length(cluster) %in% fm$na.action)]
     M <- length(unique(cluster))
@@ -137,16 +140,22 @@ cl <- function(fm, cluster, vcov=FALSE, fast=FALSE){
       }
 }
 
+#' 
+#' @export
 cl.se <- function(fm, cluster, fast=FALSE){
     cl(fm, cluster, fast=fast)[, "Std. Error"]
 }
 
+#' 
+#' @export
 robust.se <- function(fm) {
     cov.fm <- vcovHC(fm, type = "HC")
     rob.std.err.fm <- sqrt(diag(cov.fm))
     rob.std.err.fm
 }
 
+#' 
+#' @export
 naive.se <- function(fm) {
     sqrt(diag(vcov(fm)))
 }
@@ -163,6 +172,8 @@ summ.stats <- function(vec.list, na.rm=TRUE) {
          Max = sapply(vec.list, max, na.rm=na.rm))
 }
 
+#' 
+#' @export
 summ <- gtools::defmacro(df.name, DOTS, by=list(), out=NULL, expr={
     .varlist = quote(c(...))
     if(length(.varlist) == 1) {

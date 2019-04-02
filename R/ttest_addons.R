@@ -11,11 +11,11 @@
 
 #source("common.R")
 
-### Create a ANOVA table
-### Example usage: my.table <- anova.table(education + age ~ treated | month_id, dt.data, out="tables/anova_table_1.tex")
-
+#' Creates an ANOVA table
+#' @export
+#' @examples
+#' my.table <- anova.table(education + age ~ treated | month_id, dt.data, out="tables/anova_table_1.tex")
 anova.table <- function(fmla, data, ...) {
-    
   dep.vars <- get.terms(parse.formula(fmla)$lhs)
   indep.vars <- get.terms(parse.formula(fmla)$rhs)
   control.vars <- get.terms(parse.formula(fmla)$condition)
@@ -23,7 +23,6 @@ anova.table <- function(fmla, data, ...) {
     control.vars <- c()
   }
   indep.var <- indep.vars[1] # use only one variable for testing
-  
   dt.result <-
     map(1:length(dep.vars),
         function(i) {
@@ -62,9 +61,10 @@ anova.table <- function(fmla, data, ...) {
   return(dt.result)
 }
 
-### Create a ttest table
-### Example usage: my.table <- ttest.table(education + age ~ treated | month_id, dt.data, out="tables/ttest_table_1.tex")
-
+#' Create a ttest table
+#' @export
+#' @examples
+#' my.table <- ttest.table(education + age ~ treated | month_id, dt.data, out="tables/ttest_table_1.tex")
 ttest.table <- function(fmla, data, add.stats=c(), ...) {
 
   dep.vars <- get.terms(parse.formula(fmla)$lhs)
@@ -169,6 +169,4 @@ ttest.table <- function(fmla, data, add.stats=c(), ...) {
 
   return(dt.result)
 }
-
-
 
