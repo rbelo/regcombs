@@ -4,7 +4,7 @@
 \alias{reg.combs}
 \title{Reg Combs}
 \usage{
-reg.combs(fmla, data, reg.fn = "felm", fe = ~0, iv = ~0, cl = ~0,
+reg.combs(fmla, data, reg.fn = ~felm, fe = ~0, iv = ~0, cl = ~0,
   w = ~0, controls.alone = FALSE, include.all = FALSE,
   omit.stat = c("f", "ser"), n.cores = 1, model.summaries = TRUE,
   test = FALSE, ...)
@@ -18,15 +18,15 @@ reg.combs(fmla, data, reg.fn = "felm", fe = ~0, iv = ~0, cl = ~0,
 This function allows you to perform regression combinations
 }
 \examples{
-reg.combs(a1 + a2 ~ b1 + b2 | c1 + c2 ,
-         fe = ~ (f1 + f2),
-         iv = ~
-           (e1 | e2 ~ i1 + i2) +
-           (e3 | e4 ~ i3 + i4),
-         cl = ~ (cl1 + cl2),
-         w = ~ w1 + w2,
-         data = dt[1] + dt[2] ~ .,
-         reg.fn = ~ felm + logit,
-         include.all = TRUE)
+ reg.combs(a1 + a2 ~ b1 + b2 + (b1 + b2) | c1 + (c1 + c2),
+          fe = ~ (f1 + f2),
+          iv = ~
+            (e1 | e2 ~ i1 + i2) +
+            (e3 | e4 ~ i3 + i4),
+          cl = ~ cl1 + cl2,
+          w = ~ w1 + w2,
+          data = dt[1] + dt[2] ~ .,
+          reg.fn = ~ felm + logit,
+          test = TRUE)
 }
 \keyword{cats}
