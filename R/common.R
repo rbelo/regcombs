@@ -160,6 +160,8 @@ naive.se <- function(fm) {
     sqrt(diag(vcov(fm)))
 }
 
+#' 
+#' @export
 summ.stats <- function(vec.list, na.rm=TRUE) {
     list(
          Var = names(vec.list),
