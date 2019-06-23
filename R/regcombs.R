@@ -49,8 +49,8 @@ reg.combs.models <- function(fmla, data, reg.fn = ~ felm, reg.params = ~ 0,
   if (length(controls) == 0) {
     controls <- "1"
   }
-  dt.models <- data.table(expand.grid(dep_var = dep.vars,
-                                      indep_vars = indep.vars))
+  dt.models <- data.table(expand.grid(indep_vars = indep.vars, # indep_vars first because expand.grid groups the second variable instead of the first.
+                                      dep_var = dep.vars))[, list(dep_var, indep_vars)]
   dt.models <- add.to.models(dt.models, "controls",
                              as.formula(paste( "~", paste0(controls, collapse=" + "))))
   dt.models[controls == "1", controls := ""]
