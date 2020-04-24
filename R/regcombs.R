@@ -152,6 +152,14 @@ reg.combs <- function(fmla, data, reg.fn = ~ felm, reg.params = ~ 0,
                 },
                 combine = c,
                 n.cores = n.cores)
+  ## Make sure that nls models are transformed to lm objects so that stargazer can display them
+  models <- lapply(models, function(model) {
+    if (class(model) == "nls") {
+      as.lm(model)
+    } else {
+      model
+    }
+  })
   if (dt.models[reg_fn != "felm" & cl != "0", .N] > 0) {
     ## Calculate SE using cl.se
     models.se <-
