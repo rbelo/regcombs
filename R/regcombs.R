@@ -96,6 +96,7 @@ reg.combs.models <- function(fmla, data, reg.fn = ~ felm, reg.params = ~ 0,
 #'          test = TRUE)
 reg.combs <- function(fmla, data, reg.fn = ~ felm, reg.params = ~ 0,
                       fe = ~ 0, iv = ~ 0, cl = ~ 0, w = ~ 0,
+                      robust = FALSE,
                       omit.stat=c("f", "ser"),
                       n.cores=1,
                       model.summaries = TRUE,
@@ -146,8 +147,8 @@ reg.combs <- function(fmla, data, reg.fn = ~ felm, reg.params = ~ 0,
   }
   models <- map(1:length(commands),
                 function(i) {
-                  print(paste("Time:", Sys.time()))
-                  print(paste("Model:", commands[i]))
+                  message(paste("Time:", Sys.time()))
+                  message(paste("Model:", commands[i]))
                   list(eval(parse(text=commands[i])))
                 },
                 combine = c,
@@ -164,15 +165,30 @@ reg.combs <- function(fmla, data, reg.fn = ~ felm, reg.params = ~ 0,
     ## Calculate SE using cl.se
     models.se <-
       map(1:length(commands), function(iter) {
-        print(paste("Time:", Sys.time()))
+        message(paste("Time:", Sys.time()))
         if (dt.models[iter, reg_fn] == "felm" | dt.models[iter, cl] == "0") {
           cl.cmd <- paste0("naive.se(models[[", iter, "]])")
         } else {
         cl.cmd <- paste0("cl.se(models[[", iter, "]],",
                          dt.models[iter, data], "[, ", dt.models[iter, cl], "])")
         }
-        print(paste("Model SE:", cl.cmd))
+        message(paste("Model SE:", cl.cmd))
         list(eval(parse(text=cl.cmd)))
+      }, combine = c, n.cores = n.cores)
+    stargazer(models, se=models.se, type="text", omit.stat=omit.stat, ...)
+    if(model.summaries == TRUE) {
+      models <- lapply(models, summary)
+    }
+    list(models=models,
+         models.se=models.se)
+  } else if (robust == TRUE ) {
+    ## Calculate SE using robust.se
+    models.se <-
+      map(1:length(commands), function(iter) {
+        message(paste("Time:", Sys.time()))
+        robust.cmd <- paste0("robust.se(models[[", iter, "]])")
+        message(paste("Model SE:", robust.cmd))
+        list(eval(parse(text=robust.cmd)))
       }, combine = c, n.cores = n.cores)
     stargazer(models, se=models.se, type="text", omit.stat=omit.stat, ...)
     if(model.summaries == TRUE) {

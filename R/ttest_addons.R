@@ -33,7 +33,7 @@ anova.table <- function(fmla, data, ...) {
                                 " sd" = sd(get(dep.var) , na.rm=TRUE),
                                 n  = as.double(sum(!is.na(get(dep.var))))),
                          by=c(control.vars, indep.var)]
-          dt.tmp <- melt(dt.tmp,
+          dt.tmp <- melt.data.table(dt.tmp,
                          measure.vars=c(" avg", " sd", "n"),
                          variable.name = "stat")
           dt.tmp <- dcast.data.table(dt.tmp, as.formula(paste(paste(c("var","stat", control.vars), collapse=" + ")," ~ ", indep.var)),
@@ -130,11 +130,11 @@ ttest.table <- function(fmla, data, add.stats=c(), ...) {
   dt.result <-
     merge(
       merge(
-        melt(dt.tmp.1,
+        melt.data.table(dt.tmp.1,
              measure.vars = capitalize(stats),
              variable.name="stat",
              value.name = "group_1")[order(get(c("var", control.vars, test.var)))],
-        melt(dt.tmp.2,
+        melt.data.table(dt.tmp.2,
              measure.vars = capitalize(stats),
              variable.name="stat",
              value.name = "group_2")[order(get(c("var", control.vars, test.var)))],
