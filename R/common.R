@@ -275,11 +275,11 @@ summ <- gtools::defmacro(df.name, DOTS, by=list(), out=NULL, expr={
     } else {
         .varlist=paste(.varlist)[2:length(.varlist)]
     }
-    stargazer(data.frame(map(.varlist,
+    df <- data.frame(map(.varlist,
                              function(var) df.name[, summ.stats(.SD), .SDcols=var, by=by],
                              combine=rbind,
-                             n.cores=4)),
-              summary=FALSE, type="text", out=out, float = FALSE)
+                             n.cores=4))
+    stargazer(df, summary=FALSE, type="text", out=out, float = FALSE)
 })
 
 compress.dt <- function(dt) {
