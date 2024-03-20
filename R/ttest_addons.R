@@ -133,14 +133,14 @@ ttest.table <- function(fmla, data, add.stats=c(), ...) {
         melt.data.table(dt.tmp.1,
              measure.vars = capitalize(stats),
              variable.name="stat",
-             value.name = "group_1")[order(get(c("var", control.vars, test.var)))],
+             value.name = "group_1")[order(mget(c("var", control.vars, test.var)))],
         melt.data.table(dt.tmp.2,
              measure.vars = capitalize(stats),
              variable.name="stat",
-             value.name = "group_2")[order(get(c("var", control.vars, test.var)))],
+             value.name = "group_2")[order(mget(c("var", control.vars, test.var)))],
         by=c(control.vars, "var", test.var, "stat")),
       dt.result[, c("var_order", "var", control.vars, test.var, "diff", "t_stat", "pval"), with=FALSE],
-      by=c("var", control.vars, test.var), all.x=TRUE)[order(var_order, get(c("var", control.vars, test.var)))]
+      by=c("var", control.vars, test.var), all.x=TRUE)[order(mget(c("var_order", "var", control.vars, test.var)))]
 
   dt.result[, var_order := NULL]
   dt.result[stat != "Avg",
